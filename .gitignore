@@ -1,0 +1,5 @@
+.env
+*.json
+*.sql
+.idea/
+__pycache__/
