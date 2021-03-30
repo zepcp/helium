@@ -54,14 +54,14 @@ Useful commands
 
 On AWS
 -------
-Deploying image to ECR
+Deploy image to ECR
 
     aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
     docker build -t helium-app .
     docker tag helium-app:latest <aws_account_id>.dkr.ecr.<region>.amazonaws.com/helium-app:latest
     docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/helium-app:latest
 
-Launching image on EC2
+Launch image on EC2
 
     ssh -i <access_key>.pem ec2-user@<ip_address>
     sudo yum install -y docker
@@ -76,3 +76,20 @@ Launching image on EC2
 
     docker pull <aws_account_id>.dkr.ecr.<region>.amazonaws.com/helium-app:latest
     docker run -d --name helium-container -p 80:80 <aws_account_id>.dkr.ecr.<region>.amazonaws.com/helium-app
+
+On Civo
+-------
+Push image to docker hub
+
+    docker build -t <docker_id>/helium .
+    docker push <docker_id>/helium:latest
+
+Deploy image to civo
+
+    kubectl apply -f kubernetes/deployment.yaml
+    kubectl apply -f kubernetes/service.yaml
+    kubectl apply -f kubernetes/ingress.yaml
+
+Access container
+
+    http://helium.<dns_name>/docs

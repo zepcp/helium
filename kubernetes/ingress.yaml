@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: helium
+  name: helium-ingress
+spec:
+  rules:
+    - host: helium.<civo_dns>
+      http:
+        paths:
+          -
+            backend:
+              service:
+                name: helium
+                port:
+                  number: 80
+            path: /
+            pathType: "Prefix"

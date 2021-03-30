@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: helium
+  labels:
+    app: helium
+spec:
+  ports:
+    - name: "helium"
+      port: 80
+  selector:
+    app: helium

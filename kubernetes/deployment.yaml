@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helium
+spec:
+  selector:
+    matchLabels:
+      app: helium
+  template:
+    metadata:
+      labels:
+        app: helium
+    spec:
+      containers:
+        - image: <docker_id>/helium:latest
+          name: helium
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SECRET_KEY
+              value: "<secret_key>"
