@@ -26,7 +26,8 @@ async def root(request: Request, db: Database = Depends(settings.database),
         else "2021-0{}-01".format(month + 1)
 
     my_rewards = await rewards(min_time, max_time, db)
-    res = {"z": 0, "v": 0, "j": 0, "m": 0, "g": 0, "month": calendar.month_abbr[3]}
+    res = {"z": 0, "v": 0, "j": 0, "m": 0, "g": 0,
+           "month": calendar.month_abbr[month]}
 
     for x in my_rewards:
         owner = x.get("hotspot").owner
