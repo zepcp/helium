@@ -35,9 +35,11 @@ async def root(request: Request, db: Database = Depends(settings.database),
         if owner == "vasco":
             res["v"] += reward.get("owner")
             res["z"] += reward.get("referral")
-        elif owner == "jorge":
-            res["j"] += reward.get("owner")
-            res["z"] += reward.get("referral")
+        elif owner == "jorge" and month != 2:
+            res["j"] += reward.get("owner") if month != 3 \
+                else reward.get("owner") - 5.46
+            res["z"] += reward.get("referral") if month != 3 \
+                else reward.get("referral") - 2.73
         elif owner == "marcia":
             res["m"] += reward.get("owner")
             res["v"] += reward.get("referral")
