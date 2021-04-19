@@ -93,3 +93,13 @@ Deploy image to civo
 Access container
 
     http://helium.<dns_name>/docs
+
+Update pod with latest image
+
+    kubectl rollout restart deployment/helium
+
+Other kubernetes commands
+
+    kubectl get pods
+    kubectl get deployments
+    kubectl rollout status deployment/helium

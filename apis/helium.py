@@ -15,17 +15,17 @@ router.dependencies = [oauth2_token]
 def get_reward(hotspot: str, min_time: str, max_time: str) -> float:
     response = get("https://api.helium.io/v1/hotspots/{}/rewards/sum".format(hotspot),
                    params={"min_time": min_time, "max_time": max_time})
-    return round(response.json()["data"]["sum"]/10**8, 2)
+    return response.json()["data"]["sum"] / 10**8
 
 
 def get_balance(wallet: str) -> float:
     response = get("https://api.helium.io/v1/accounts/{}/".format(wallet))
-    return round(response.json().get("data").get("balance")/10**8, 2)
+    return response.json().get("data").get("balance") / 10**8
 
 
 def get_price() -> float:
     response = get("https://api.helium.io/v1/oracle/prices/current")
-    return round(response.json().get("data").get("price") / 10 ** 8, 2)
+    return response.json().get("data").get("price") / 10 ** 8
 
 
 @router.get("/reward/{owner}", response_model=Dict[str, Any])
@@ -35,9 +35,9 @@ async def reward(owner: str, min_time: str, max_time: str, db: Database = Depend
     return {
         "hotspot": hotspot,
         "reward": {
-            "total": amount,
-            "referral": amount * 0.05,
-            "owner": amount * 0.1,
+            "total": round(amount, 2),
+            "referral": round(amount * 0.05, 2),
+            "owner": round(amount * 0.1, 2),
         },
     }
 
@@ -50,9 +50,9 @@ async def rewards(min_time: str, max_time: str, db: Database = Depends(settings.
         response.append({
             "hotspot": hotspot,
             "reward": {
-                "total": amount,
-                "referral": amount * 0.05,
-                "owner": amount * 0.1,
+                "total": round(amount, 2),
+                "referral": round(amount * 0.05, 2),
+                "owner": round(amount * 0.1, 2),
             },
         })
     return response
@@ -63,7 +63,7 @@ async def balance(owner: str, db: Database = Depends(settings.database)):
     wallet = db.get_wallet(owner=owner)
     return {
         "wallet": wallet,
-        "balance": get_balance(wallet.address)
+        "balance": round(get_balance(wallet.address), 2)
     }
 
 
@@ -73,7 +73,7 @@ async def balances(db: Database = Depends(settings.database)):
     for wallet in db.get_wallets():
         response.append({
             "wallet": wallet,
-            "balance": get_balance(wallet.address)
+            "balance": rount(get_balance(wallet.address), 2)
         })
     return response
 
@@ -81,5 +81,5 @@ async def balances(db: Database = Depends(settings.database)):
 @router.get("/price", response_model=Dict[str, Any])
 async def price():
     return {
-        "price": get_price(),
+        "price": round(get_price(), 2),
     }

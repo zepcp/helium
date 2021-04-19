@@ -1,7 +1,9 @@
 from time import time
 
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 
+from apis.homepage import router as homepage_api
 from apis.user import router as user_apis
 from apis.helium import router as helium_apis
 from apis.coingecko import router as coingecko_apis
@@ -14,6 +16,7 @@ if settings.database == Postgres:
     Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.middleware("http")
@@ -30,6 +33,7 @@ async def status():
     return {"status": "OK"}
 
 
+app.include_router(homepage_api, prefix="")
 app.include_router(authentication_apis, prefix="")
 app.include_router(user_apis, prefix="/user")
 app.include_router(helium_apis, prefix="/helium")
