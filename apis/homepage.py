@@ -4,6 +4,7 @@ import calendar
 from fastapi import Request, APIRouter, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from aiocache import cached, Cache
 
 from database.database import Database
 from settings import settings
@@ -14,20 +15,23 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/", response_class=HTMLResponse)
+@cached(ttl=60 * 15, key_builder=(lambda _, *args, **kwargs: kwargs['month']))
 async def root(request: Request, db: Database = Depends(settings.database),
-               month: int = datetime.today().month - 1):
-    if month < 1 or month > 12:
+               month: int = 0):
+    if month < 0 or month > 12:
         raise ValueError
 
     min_time = "2021-{}-01".format(month) if month > 9 \
-        else "2021-0{}-01".format(month)
+        else "2021-0{}-01".format(month) if month > 0 \
+        else "2021-01-01"
 
     max_time = "2021-{}-01".format(month + 1) if month > 8 \
-        else "2021-0{}-01".format(month + 1)
+        else "2021-0{}-01".format(month + 1) if month > 0 \
+        else "2022-01-01"
 
     my_rewards = await rewards(min_time, max_time, db)
     res = {"z": 0, "v": 0, "j": 0, "m": 0, "g": 0,
-           "month": calendar.month_abbr[month]}
+           "month": calendar.month_abbr[month] if month > 0 else "Total"}
 
     for x in my_rewards:
         owner = x.get("hotspot").owner

@@ -73,7 +73,7 @@ async def balances(db: Database = Depends(settings.database)):
     for wallet in db.get_wallets():
         response.append({
             "wallet": wallet,
-            "balance": rount(get_balance(wallet.address), 2)
+            "balance": round(get_balance(wallet.address), 2)
         })
     return response
 
