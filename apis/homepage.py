@@ -30,7 +30,7 @@ async def root(request: Request, db: Database = Depends(settings.database),
         else "2022-01-01"
 
     my_rewards = await rewards(min_time, max_time, db)
-    res = {"z": 0, "v": 0, "j": 0, "m": 0, "g": 0,
+    res = {"z": 0, "v": 0, "j": 0, "m": 0, "gu": 0, "gr": 0, "d": 0,
            "month": calendar.month_abbr[month] if month > 0 else "Total"}
 
     for x in my_rewards:
@@ -39,17 +39,23 @@ async def root(request: Request, db: Database = Depends(settings.database),
         if owner == "vasco":
             res["v"] += reward.get("owner")
             res["z"] += reward.get("referral")
-        elif owner == "jorge" and month != 2:
-            res["j"] += reward.get("owner") if month != 3 \
-                else reward.get("owner") - 5.46
-            res["z"] += reward.get("referral") if month != 3 \
-                else reward.get("referral") - 2.73
+        elif owner == "jorge":
+            res["j"] += reward.get("owner")
+            res["z"] += reward.get("referral")
         elif owner == "marcia":
             res["m"] += reward.get("owner")
             res["v"] += reward.get("referral")
         elif owner == "guilherme":
-            res["g"] += reward.get("owner")
+            res["gu"] += reward.get("owner")
             res["v"] += reward.get("referral")
+        elif owner == "graca":
+            res["gr"] += reward.get("owner")
+            res["z"] += reward.get("referral") / 2
+            res["v"] += reward.get("referral") / 2
+        elif owner == "dani":
+            res["d"] += reward.get("owner")
+            res["z"] += reward.get("referral") / 2
+            res["v"] += reward.get("referral") / 2
 
     res["v"], res["z"] = round(res["v"], 2), round(res["z"], 2)
     return templates.TemplateResponse("index.html", {"request": request, **res})

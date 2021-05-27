@@ -46,7 +46,15 @@ async def reward(owner: str, min_time: str, max_time: str, db: Database = Depend
 async def rewards(min_time: str, max_time: str, db: Database = Depends(settings.database)):
     response = []
     for hotspot in db.get_hotspots():
-        amount = get_reward(hotspot.address, min_time=min_time, max_time=max_time)
+        overwrite_min = min_time
+        if hotspot.owner == "jorge" and min_time < "2021-03-14":
+            overwrite_min = "2021-03-14"
+
+        if hotspot.owner in ("graca", "dani") and min_time < "2021-05-24":
+            overwrite_min = "2021-05-24"
+
+        amount = get_reward(hotspot.address, min_time=overwrite_min, max_time=max_time) if overwrite_min < max_time else 0
+
         response.append({
             "hotspot": hotspot,
             "reward": {
