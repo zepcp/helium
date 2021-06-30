@@ -50,12 +50,10 @@ async def root(request: Request, db: Database = Depends(settings.database),
             res["v"] += reward.get("referral")
         elif owner == "graca":
             res["gr"] += reward.get("owner")
-            res["z"] += reward.get("referral") / 2
-            res["v"] += reward.get("referral") / 2
+            res["z"] += reward.get("referral")
         elif owner == "dani":
             res["d"] += reward.get("owner")
-            res["z"] += reward.get("referral") / 2
-            res["v"] += reward.get("referral") / 2
+            res["v"] += reward.get("referral")
 
     res["v"], res["z"] = round(res["v"], 2), round(res["z"], 2)
     return templates.TemplateResponse("index.html", {"request": request, **res})
