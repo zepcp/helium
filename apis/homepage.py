@@ -25,7 +25,8 @@ async def root(request: Request, db: Database = Depends(settings.database),
         else "2021-0{}-01".format(month) if month > 0 \
         else "2021-01-01"
 
-    max_time = "2021-{}-01".format(month + 1) if month > 8 \
+    max_time = "2022-01-01" if month == 12 \
+        else "2021-{}-01".format(month + 1) if month > 8 \
         else "2021-0{}-01".format(month + 1) if month > 0 \
         else "2022-01-01"
 
