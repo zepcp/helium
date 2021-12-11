@@ -8,7 +8,7 @@ pydantic
 requests
 python-multipart
 sqlalchemy
-psycopg2
 jinja2
 aiofiles
 aiocache
+psycopg2-binary
