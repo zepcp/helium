@@ -10,21 +10,21 @@ from settings import settings
 
 router = APIRouter()
 router.dependencies = [oauth2_token]
-
+user_agent = {'User-agent': 'Mozilla/5.0'}
 
 def get_reward(hotspot: str, min_time: str, max_time: str) -> float:
     response = get("https://api.helium.io/v1/hotspots/{}/rewards/sum".format(hotspot),
-                   params={"min_time": min_time, "max_time": max_time})
+                   params={"min_time": min_time, "max_time": max_time}, headers=user_agent)
     return response.json()["data"]["sum"] / 10**8
 
 
 def get_balance(wallet: str) -> float:
-    response = get("https://api.helium.io/v1/accounts/{}/".format(wallet))
+    response = get("https://api.helium.io/v1/accounts/{}/".format(wallet), headers=user_agent)
     return response.json().get("data").get("balance") / 10**8
 
 
 def get_price() -> float:
-    response = get("https://api.helium.io/v1/oracle/prices/current")
+    response = get("https://api.helium.io/v1/oracle/prices/current", headers=user_agent)
     return response.json().get("data").get("price") / 10 ** 8
 
 
